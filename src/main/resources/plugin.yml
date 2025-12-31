@@ -1,0 +1,8 @@
+name: AnotherCurrency
+version: '0.1'
+main: io.github.baole444.anotherCurrency.AnotherCurrency
+api-version: '1.21'
+prefix: ANC
+authors: [ baole444 ]
+description: A plugin that allows adding currencies and trading them.
+website: https://github.com/baole444/AnotherCurrency
