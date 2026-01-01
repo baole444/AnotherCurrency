@@ -1,0 +1,20 @@
+# Configuration for the global limit on all currencies.
+#
+# Minimum Trading Amount (min-trade): set the limit on how little money are allowed to be transfer each time.
+#   * Note: This value is clamped to minimum of 0.001
+#   Example: setting it to 1 means Steve can only transfer to Alex at least 1 unit of currency.
+#
+# Min and Max are limiter for player's bank account, the limit is per-currency.
+#  - enable: (true/false) enforce max/min limit or not.
+#  - value: the minimm/maximum value that the player can have for a type of currency.
+#  * Note: if min value = max value, then there is no limit.
+#  Example: Setting min value to -1000 mean that Steve can take on a debt up to 1000 currency unit.
+#
+currency-limit:
+  min-trade: 0.1
+  min:
+    enable: true
+    value: 0.0
+  max:
+    enable: true
+    value: 1000000000.0

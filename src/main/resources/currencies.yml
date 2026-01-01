@@ -1,0 +1,42 @@
+# Configuration for type of currencies
+#
+# Currency Code Name: a unique name given to the currency,
+# this is the currency's canonical name.
+#
+# Name: the display name for the currency,
+# can be used for display the currency's name in chat or scoreboard, etc.
+#   * Note: The plugin will use currency's canonical name if this string is empty.
+#
+# Prefix: the string that go before the balance of the players.
+# Suffix: the string that go after the balance of the players.
+# Note:
+#   - Both legacy color code using "&" and MiniMessage tags "<>" are supported.
+#   - The plugin does not automatically add white space after prefix and before suffix,
+#     you will need to include it in the suffix and prefix string if you want spacing.
+#
+# Grouping: allow truncation of currency units.
+#   - Value: the amount of unit each group has.
+#   - Symbols: the symbol for each tier of group.
+#   * Note: value lesser or equals to 0 will disable grouping,
+#           if the symbols has no entry, it will also disable grouping.
+#
+# Example currency is as follows, any line with "#" at the beginning
+# Will not be loaded and is view as document/comment only.
+#
+# currency_code_name_A:
+#   name: "A currency"
+#   prefix: "&6ANC " # Legacy format supported
+#   suffix: " <yellow><italic>$" # MiniMessage tag supported
+#   grouping:
+#     value: 1000
+#     symbols: K,M,B # Truncation as: 1500 -> 1.5K, 1050000 -> 1.05M 1000000000 -> 1B any higher will be 10B, etc.
+#
+# vip:
+#   name: "VIP token"
+#   prefix: "<gradient:#FF00FF:#00FFFF><bold>VIP"
+#   suffix: " <gray><italic>tokens"
+#   grouping:
+#     value: 100
+#     symbols: E,ES,LE
+#
+# End document.
