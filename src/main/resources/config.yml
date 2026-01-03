@@ -18,3 +18,25 @@ currency-limit:
   max:
     enable: true
     value: 1000000000.0
+
+# Configuration for the vault integration of AnotherCurrency.
+#
+# Hook Economy (hook-economy): set to true to enable, or false to disable hooking into Vault Economy API.
+#   * Note: If disabled, other plugins won't be able to access ANC through Vault.
+#
+# Primary Currency (primary-currency): code name of the currency that will be registered with Vault.
+# Leave it empty to use the first declared currency in currencies.yml
+#   * Note: Due to inconsistency in reading order, it is suggested you define this if you have multiple currency.
+#   * Note: This value is ignored if hook-economy is false
+#
+# Hook Permission (hook-permission): set to true to enable, or false to disable hooking into Vault Permission API.
+#
+vault:
+  hook-economy: true
+  primary-currency: ''
+  hook-permission: true
+
+# Config version number
+# DO NOT change this, it is used to know what config version you are using.
+config-version: 1
+currencies-version: 1
