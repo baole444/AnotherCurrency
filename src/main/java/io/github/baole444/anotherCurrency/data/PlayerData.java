@@ -5,16 +5,18 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Player data for currency balances.
+ * Player data for currency balances and playtime.
  * @param uuid the unique identifier of the player
  * @param playerName last known name of the player
  * @param balances map of currency code name and balance amount
+ * @param playtime tracked playtime in seconds
  */
-public record PlayerData(UUID uuid, String playerName, Map<String, Double> balances) {
+public record PlayerData(UUID uuid, String playerName, Map<String, Double> balances, long playtime) {
     public static final int DataVersion = 1;
     public static final String DataVersionKey = "data-version";
     public static final String PlayerNameKey = "player-name";
     public static final String BalancesKey = "balances";
+    public static final String PlaytimeKey = "playtime";
 
     /**
      * Compact constructor ensure new player data's balance map is not null.
@@ -32,7 +34,7 @@ public record PlayerData(UUID uuid, String playerName, Map<String, Double> balan
      * @param playerName last known name of the player
      */
     public PlayerData(UUID uuid, String playerName) {
-        this(uuid, playerName, new HashMap<>());
+        this(uuid, playerName, new HashMap<>(), 0L);
     }
 
     /**
@@ -69,5 +71,23 @@ public record PlayerData(UUID uuid, String playerName, Map<String, Double> balan
      */
     public boolean hasBalance(String currencyCode) {
         return balances.containsKey(currencyCode);
+    }
+
+    /**
+     * Set the playtime for the play data.
+     * @param seconds playtime to set, in second
+     * @return a new {@link PlayerData} of current data with updated playtime
+     */
+    public PlayerData playtime(long seconds) {
+        return new PlayerData(uuid, playerName, balances, seconds);
+    }
+
+    /**
+     * Add playtime to the play data
+     * @param additionalSeconds playtime to add, in second
+     * @return a new {@link PlayerData} of current data with updated playtime
+     */
+    public PlayerData addPlaytime(long additionalSeconds) {
+        return new PlayerData(uuid, playerName, balances, playtime + additionalSeconds);
     }
 }

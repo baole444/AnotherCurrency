@@ -20,7 +20,7 @@ public class ConfigMigrator {
     /**
      * The up-to-date config version and formatting.
      */
-    public static final int ConfigVersion = 1;
+    public static final int ConfigVersion = 2;
 
     /**
      * Config version key.
@@ -31,7 +31,6 @@ public class ConfigMigrator {
      * A set of config file version that contain breaking changes, these often are renamed key, data structure changes.
      */
     private static final Set<Integer> breakingChanges = Set.of();
-
     private final JavaPlugin plugin;
 
     /**

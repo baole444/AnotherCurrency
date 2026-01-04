@@ -20,29 +20,10 @@ public record Currency(
         String prefix, String suffix,
         Grouping grouping
 ) {
-    /**
-     * Currency config display name key.
-     */
     public static final String NameKey = "name";
-
-    /**
-     * Currency config prefix key.
-     */
     public static final String PrefixKey = "prefix";
-
-    /**
-     * Currency config suffix key.
-     */
     public static final String SuffixKey = "suffix";
-
-    /**
-     * Currency grouping value key.
-     */
     public static final String GroupingValueKey = "grouping.value";
-
-    /**
-     * Currency grouping symbols
-     */
     public static final String GroupingSymbolKey = "grouping.symbols";
 
     /**

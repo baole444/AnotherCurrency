@@ -7,24 +7,9 @@ package io.github.baole444.anotherCurrency.configurations;
  * @param hookPermission enabled/disabled permission hook with Vault Permission Provider
  */
 public record Vault(boolean hookEconomy, String primaryCurrency, boolean hookPermission) {
-    /**
-     * Vault config main key.
-     */
     public static final String VaultKey = "vault";
-
-    /**
-     * Vault config hook economy key.
-     */
     public static final String HookEconomyKey = "hook-economy";
-
-    /**
-     * Vault config primary currency key.
-     */
     public static final String PrimaryCurrencyKey = "primary-currency";
-
-    /**
-     * Vault config hook permission key.
-     */
     public static final String HookPermissionKey = "hook-permission";
 
     /**

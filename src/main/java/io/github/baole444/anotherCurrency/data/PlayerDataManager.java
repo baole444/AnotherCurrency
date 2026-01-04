@@ -95,6 +95,41 @@ public class PlayerDataManager {
     }
 
     /**
+     * Get the playtime of a player, in seconds.
+     * @param player the player to check
+     * @return the tracked time on server
+     */
+    public long playtime(OfflinePlayer player) {
+        return playerData(player).playtime();
+    }
+
+    /**
+     * Set the playtime for a player.
+     * @param player the player to set
+     * @param seconds the player's new playtime, in second
+     * @return true if set successfully
+     */
+    public boolean playtime(OfflinePlayer player, long seconds) {
+        UUID uuid = player.getUniqueId();
+        PlayerData data = playerData(player).addPlaytime(seconds);
+        cache.put(uuid, data);
+        return true;
+    }
+
+    /**
+     * Increase a player's playtime by a certain amount.
+     * @param player the player to add
+     * @param seconds additional time in second
+     * @return true if added successfully
+     */
+    public boolean addPlaytime(OfflinePlayer player, long seconds) {
+        UUID uuid = player.getUniqueId();
+        PlayerData data = playerData(player).addPlaytime(seconds);
+        cache.put(uuid, data);
+        return true;
+    }
+
+    /**
      * Save player data to disk.
      * @param data the player data to save
      * @return true if save successfully
@@ -104,7 +139,7 @@ public class PlayerDataManager {
         FileConfiguration config = new YamlConfiguration();
         config.set(PlayerData.DataVersionKey, PlayerData.DataVersion);
         config.set(PlayerData.PlayerNameKey, data.playerName());
-        config.set(PlayerData.PlayerNameKey, data.playerName());
+        config.set(PlayerData.PlaytimeKey, data.playtime());
         config.createSection(PlayerData.BalancesKey, data.balances());
 
         try {
@@ -130,7 +165,7 @@ public class PlayerDataManager {
 
         FileConfiguration config = YamlConfiguration.loadConfiguration(playerFile);
         String playerName = config.getString(PlayerData.PlayerNameKey, player.getName());
-
+        long playtime = config.getLong(PlayerData.PlaytimeKey, 0L);
         Map<String, Double> balances = new HashMap<>();
         ConfigurationSection balanceSection = config.getConfigurationSection(PlayerData.BalancesKey);
 
@@ -140,9 +175,7 @@ public class PlayerDataManager {
             }
         }
 
-        PlayerData data = new PlayerData(uuid, playerName, balances);
-        cache.put(uuid, data);
-        return data;
+        return new PlayerData(uuid, playerName, balances, playtime);
     }
 
     /**

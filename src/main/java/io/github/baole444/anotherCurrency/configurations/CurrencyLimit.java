@@ -7,39 +7,12 @@ package io.github.baole444.anotherCurrency.configurations;
  * @param max maximum limit option
  */
 public record CurrencyLimit(double minTrade, Min min, Max max) {
-    /**
-     * Currency limit config main key.
-     */
     public static final String CurrencyLimitKey = "currency-limit";
-
-    /**
-     * Currency limit minimum trade key.
-     */
     public static final String MinTradeKey = "min-trade";
-
-    /**
-     * Path to minimum trade key.
-     */
     public static final String MinTradePath = CurrencyLimitKey + "." + MinTradeKey;
-
-    /**
-     * Currency limit minimum key.
-     */
     public static final String MinKey = "min";
-
-    /**
-     * Currency limit maximum key.
-     */
     public static final String MaxKey = "max";
-
-    /**
-     * Currency limit enable key.
-     */
     public static final String EnableKey = "enable";
-
-    /**
-     * Currency limit value key.
-     */
     public static final String ValueKey = "value";
 
     /**

@@ -16,9 +16,10 @@ public class ConfigManager {
      * Default config file name.
      */
     public static final String ConfigYML = "config.yml";
-    private ConfigMigrator migrator;
+    private final ConfigMigrator migrator;
     private final JavaPlugin plugin;
     private CurrencyLimit currencyLimit;
+    private Players players;
     private Vault vault;
 
     /**
@@ -40,6 +41,7 @@ public class ConfigManager {
 
         FileConfiguration config = plugin.getConfig();
         currencyLimit = getCurrencyLimitFromConfig(config);
+        players = getPlayersFromConfig(config);
         vault = getVaultFromConfig(config);
     }
 
@@ -60,6 +62,14 @@ public class ConfigManager {
     }
 
     /**
+     * Get the 'players' config.
+     * @return the players option
+     */
+    public Players players() {
+        return players;
+    }
+
+    /**
      * Get the vault config.
      * @return the vault hook options
      */
@@ -73,9 +83,20 @@ public class ConfigManager {
      * @return true if update successfully
      */
     public boolean updateCurrencyLimit(CurrencyLimit newLimit) {
-        this.currencyLimit = newLimit;
+        currencyLimit = newLimit;
         FileConfiguration config = plugin.getConfig();
         return saveCurrencyLimitToConfig(config, newLimit);
+    }
+
+    /**
+     * Update players options to new settings.
+     * @param newPlayers the options to update width
+     * @return true if update successfully
+     */
+    public boolean updatePlayers(Players newPlayers) {
+        players = newPlayers;
+        FileConfiguration config = plugin.getConfig();
+        return savePlayersToConfig(config, newPlayers);
     }
 
     /**
@@ -84,7 +105,7 @@ public class ConfigManager {
      * @return true if update successfully
      */
     public boolean updateVault(Vault newVault) {
-        this.vault = newVault;
+        vault = newVault;
         FileConfiguration config = plugin.getConfig();
         return saveVaultToConfig(config, newVault);
     }
@@ -112,6 +133,26 @@ public class ConfigManager {
         return true;
     }
 
+    private Players getPlayersFromConfig(FileConfiguration config) {
+        if (plugin == null || config == null) return Players.getDefault();
+        boolean trackPlaytime = config.getBoolean(Players.PlaytimePath.TrackPlayTime, false);
+        boolean detectAFK = config.getBoolean(Players.PlaytimePath.DetectAFK, true);
+        long AFKThreshold = config.getLong(Players.PlaytimePath.AFKThreshold, 300L);
+
+        Players.Playtime playtime = new Players.Playtime(trackPlaytime, detectAFK, AFKThreshold);
+        return new Players(playtime);
+    }
+
+    private boolean savePlayersToConfig(FileConfiguration config, Players newPlayers) {
+        if (plugin == null || config == null) return false;
+        config.set(Players.PlaytimePath.TrackPlayTime, newPlayers.playtime().trackPlaytime());
+        config.set(Players.PlaytimePath.DetectAFK, newPlayers.playtime().detectAFK());
+        config.set(Players.PlaytimePath.AFKThreshold, newPlayers.playtime().afkThreshold());
+
+        plugin.saveConfig();
+        return true;
+    }
+
     private Vault getVaultFromConfig(FileConfiguration config) {
         if (plugin == null || config == null) return Vault.getDefault();
         boolean hookEconomy = config.getBoolean(Vault.Path.HookEconomy, true);
@@ -123,8 +164,8 @@ public class ConfigManager {
 
     private boolean saveVaultToConfig(FileConfiguration config, Vault newVault) {
         if (plugin == null | config == null) return false;
-        config.set(Vault.Path.HookPermission, newVault.hookEconomy());
-        config.set(Vault.Path.HookPermission, newVault.hasPrimaryCurrency());
+        config.set(Vault.Path.HookEconomy, newVault.hookEconomy());
+        config.set(Vault.Path.PrimaryCurrency, newVault.hasPrimaryCurrency());
         config.set(Vault.Path.HookPermission, newVault.hookPermission());
 
         plugin.saveConfig();

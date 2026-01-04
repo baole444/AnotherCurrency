@@ -3,6 +3,7 @@ package io.github.baole444.anotherCurrency;
 import io.github.baole444.anotherCurrency.configurations.ConfigManager;
 import io.github.baole444.anotherCurrency.configurations.CurrencyManager;
 import io.github.baole444.anotherCurrency.data.PlayerDataManager;
+import io.github.baole444.anotherCurrency.data.PlaytimeTracker;
 import io.github.baole444.anotherCurrency.integrations.VaultHook;
 import io.github.baole444.anotherCurrency.listeners.PlayerDataListener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -18,6 +19,7 @@ public final class AnotherCurrency extends JavaPlugin {
     private ConfigManager configManager;
     private CurrencyManager currencyManager;
     private PlayerDataManager playerDataManager;
+    private PlaytimeTracker playtimeTracker;
     private VaultHook vaultHook;
 
     /**
@@ -30,9 +32,14 @@ public final class AnotherCurrency extends JavaPlugin {
         getLogger().info("Checking configurations...");
         configManager = new ConfigManager(this);
         currencyManager = new CurrencyManager(this);
-
         playerDataManager = new PlayerDataManager(this);
+        playtimeTracker = new PlaytimeTracker(this);
         getServer().getPluginManager().registerEvents(new PlayerDataListener(this), this);
+
+        if (configManager.players().playtime().trackPlaytime()) {
+            playtimeTracker.start();
+            getLogger().info("Playtime tracking started.");
+        }
 
         vaultHook = new VaultHook(this);
         if (vaultHook.setupEconomy()) getLogger().info("Hooking into Vault Economy successfully.");
@@ -41,6 +48,7 @@ public final class AnotherCurrency extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        playtimeTracker.stop();
         playerDataManager.clearCache();
         vaultHook.unregisterEconomy();
         getLogger().info("AnotherCurrency disabled.");
@@ -71,6 +79,14 @@ public final class AnotherCurrency extends JavaPlugin {
     }
 
     /**
+     * Get the playtime tracker of ANC.
+     * @return the playtime tracker
+     */
+    public PlaytimeTracker playtimeTracker() {
+        return playtimeTracker;
+    }
+
+    /**
      * Get the vault integration of ANC.
      * @return the vault hook
      */
@@ -82,9 +98,20 @@ public final class AnotherCurrency extends JavaPlugin {
      * Reload all configurations of ANC from disk.
      */
     public void reloadConfigs() {
-        configManager.loadConfig();
+        boolean trackingPlaytime = configManager.players().playtime().trackPlaytime();
+        configManager.reload();
         currencyManager.loadCurrencies();
         playerDataManager.clearCache();
+
+        boolean stillTrackPlaytime = configManager.players().playtime().trackPlaytime();
+        if (stillTrackPlaytime && !trackingPlaytime) {
+            playtimeTracker.start();
+            getLogger().info("Playtime tracker started.");
+        } else if (!stillTrackPlaytime && trackingPlaytime) {
+            playtimeTracker.stop();
+            getLogger().info("Playtime tracking stopped.");
+        }
+
         getLogger().info("Configuration reloaded.");
     }
 }

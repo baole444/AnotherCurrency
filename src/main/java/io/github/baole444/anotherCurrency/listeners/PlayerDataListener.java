@@ -27,6 +27,9 @@ public class PlayerDataListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         plugin.playerDataManager().playerData(event.getPlayer());
+        if (plugin.configManager().players().playtime().trackPlaytime()) {
+            plugin.playtimeTracker().onPlayerJoin(event.getPlayer());
+        }
     }
 
     /**
@@ -35,6 +38,10 @@ public class PlayerDataListener implements Listener {
      */
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
+        if (plugin.configManager().players().playtime().trackPlaytime()) {
+            plugin.playtimeTracker().onPlayerQuit(event.getPlayer());
+        }
+
         plugin.playerDataManager().unloadPlayerData(event.getPlayer());
     }
 }
